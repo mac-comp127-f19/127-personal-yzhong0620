@@ -113,7 +113,12 @@ public class MessyExpressions {
      *   as you possibly can (without changing the result)!
      */
     public static boolean containsOwnLength(String text) {
-        return text.contains("text.length()");
+        int len = text.length();
+        if (text.contains(String.valueOf(len))){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
-

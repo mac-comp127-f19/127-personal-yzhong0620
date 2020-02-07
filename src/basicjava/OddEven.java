@@ -15,11 +15,11 @@ public class OddEven {
         int yourNum;
         yourNum = scan.nextInt();
         if (isOdd(yourNum)==true)
-            System.out.println("That is even");
-        else
             System.out.println("That is odd");
+        else
+            System.out.println("That is even");
 
-        if (isOdd(yourNum)==false)
+        if (isOdd(yourNum)==true)
             System.out.println("Wow, that's odd!");
     }
 }

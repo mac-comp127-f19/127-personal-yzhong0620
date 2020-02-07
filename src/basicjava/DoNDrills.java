@@ -22,5 +22,10 @@ public class DoNDrills {
             System.out.println(j-1);
             j = j*2;
         }
+        int x = 2;
+        while (x<=50) {
+            System.out.println(Math.sqrt(x));
+            x = x+2;
+        }
     }
 }
