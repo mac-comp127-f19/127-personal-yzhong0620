@@ -3,6 +3,7 @@ package activityStarterCode.graphingCalculator;
 import comp127graphics.CanvasWindow;
 import comp127graphics.Line;
 import comp127graphics.Point;
+import comp127graphics.ui.Button;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ public class GraphingCalculator {
     private double xmin, xmax, step;  // computed from origin + scale + size
     private double animationParameter;
     private Line xaxis, yaxis;
+    private Button zoomIn = new Button("Zoom In");
+    private Button zoomOut = new Button("Zoom Out");
+    private Boolean animating;
+
 
     /**
      * Creates a new graphing calculator with its own window.
@@ -35,9 +40,26 @@ public class GraphingCalculator {
 
         coordinatesChanged();
 
-        canvas.animate(() ->
-            setAnimationParameter(
-                getAnimationParameter() + 0.01));
+        animating=true;
+
+        if (animating){
+            canvas.animate(() ->
+                    setAnimationParameter(
+                            getAnimationParameter() + 0.01));
+        }
+
+        canvas.onMouseDown(event->animating=true);
+        canvas.onMouseUp(event->animating=false);
+
+        canvas.add(zoomIn,0,0);
+        canvas.add(zoomOut,75,0);
+
+        zoomIn.onClick(() -> setScale(getScale() * 1.5));
+        zoomOut.onClick(()->setScale(getScale()/1.5));
+
+        canvas.onDrag(event ->
+                setAnimationParameter(
+                        event.getDelta().getX() / width));
 
     }
 
@@ -149,23 +171,34 @@ public class GraphingCalculator {
 
     public static void main(String[] args) {
         GraphingCalculator calc = new GraphingCalculator(800, 600);
-        calc.show(x -> x * x);
-        calc.show(x -> Math.cos(x));
-        calc.show(Math::cos);
-        calc.show((x, n) -> Math.atan(x / Math.sin(n)));
-        calc.show((a, b) -> Math.pow(a, b));
-        calc.show(Math::pow);
-        calc.show((x, n) -> {
-            double result = 0;
-            for (int i = 1; i < 20; i++) {
-                result += Math.sin(x * Math.pow(3, i) + n * i)
-                        / Math.pow(2.5, i);
-            }
-            return result;
-        });
-        for (int n = 0; n < 12; n++) {
-            int j=n;
-            calc.show((x, t) -> Math.sin(j * x - t * 10) / j);
+//        calc.show(x -> x * x);
+//        calc.show(x -> Math.cos(x));
+//        calc.show(Math::cos);
+//        calc.show((x, n) -> Math.atan(x / Math.sin(n)));
+//        calc.show((a, b) -> Math.pow(a, b));
+//        calc.show(Math::pow);
+//        calc.show((x, n) -> {
+//            double result = 0;
+//            for (int i = 1; i < 20; i++) {
+//                result += Math.sin(x * Math.pow(3, i) + n * i)
+//                        / Math.pow(2.5, i);
+//            }
+//            return result;
+//        });
+//        for (int n = 0; n < 12; n++) {
+//            int j=n;
+//            calc.show((x, t) -> Math.sin(j * x - t * 10) / j);
+//        }
+        for (int n = 1; n < 12; n++) {
+            double base = n * 0.1 + 1.5;
+            calc.show((x, t) -> {
+                double result = 0;
+                for (int i = 1; i < 20; i++) {
+                    result += Math.sin(x * Math.pow(base, i) - t * i * 3)
+                            / Math.pow(base, i);
+                }
+                return result;
+            });
         }
     }
 }
